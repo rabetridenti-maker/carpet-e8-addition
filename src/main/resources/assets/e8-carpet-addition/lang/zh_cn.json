@@ -1,0 +1,5 @@
+{
+    "carpet.category.E8": "E8",
+    "carpet.rule.e8ExampleRule.name": "E8 示例规则",
+    "carpet.rule.e8ExampleRule.desc": "骨架示例规则：开启后在服务端日志打印一次启动提示，用于验证 /carpet e8ExampleRule 的注册链路，确认后可删除"
+}

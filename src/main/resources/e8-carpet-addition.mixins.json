@@ -1,0 +1,10 @@
+{
+    "required": true,
+    "package": "e8.carpet.mixin",
+    "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
+    "mixins": [],
+    "client": [],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

@@ -1,0 +1,107 @@
+// 各 Minecraft 版本子项目共用的构建脚本（settings.gradle 把每个版本指向这里）。
+// 多版本骨架与 Carpet-FGA-Addition / halfmasa 同构；当前只装配 1.21.1 单节点。
+final int mcVersion = project.mcVersion
+// 26.x 起 Minecraft 官方不再混淆：切换 Loom 插件、依赖写法、Java 版本与产物任务。
+final boolean unobfuscated = mcVersion >= 26_00_00
+
+apply plugin: unobfuscated ? 'net.fabricmc.fabric-loom' : 'net.fabricmc.fabric-loom-remap'
+apply plugin: 'com.replaymod.preprocess'
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://masa.dy.fi/maven'
+        content { includeModule('carpet', 'fabric-carpet') }
+    }
+    maven {
+        url = 'https://maven.fallenbreath.me/jitpack'
+        content { includeGroupAndSubgroups('com.github') }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    if (!unobfuscated) {
+        mappings loom.officialMojangMappings()
+    }
+    def loader = unobfuscated ? implementation("net.fabricmc:fabric-loader:${project.loader_version}")
+            : modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+    def carpet = project.carpet_core_version.startsWith('com.github.')
+            || project.carpet_core_version.startsWith('curse.maven:')
+            ? project.carpet_core_version
+            : "carpet:fabric-carpet:${project.carpet_core_version}"
+    if (unobfuscated) {
+        implementation carpet
+    } else {
+        modImplementation carpet
+    }
+    if (mcVersion >= 1_21_00 && mcVersion <= 26_03_00) {
+        def fabricApi = "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+        if (unobfuscated) {
+            implementation fabricApi
+        } else {
+            modImplementation fabricApi
+        }
+    }
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+}
+
+def javaVersion = mcVersion >= 26_00_00
+        ? JavaVersion.VERSION_25
+        : (mcVersion >= 1_20_05 ? JavaVersion.VERSION_21 : JavaVersion.VERSION_16)
+group = project.maven_group
+def publicationVersion = project.findProperty('publication_version')
+if (publicationVersion != null && publicationVersion != project.mod_version) {
+    throw new GradleException(
+            "publication_version=${publicationVersion} must match mod_version=${project.mod_version}"
+    )
+}
+// 开发构建带时间戳版本号；发布构建由 CI 传 -Ppublication_version=<tag>，版本号与 Tag 完全一致。
+version = publicationVersion ?: "${project.mod_version}+v${new Date().format('yyMMddHHmm')}-mc${project.minecraft_version}"
+base.archivesName = project.archives_base_name
+
+tasks.withType(org.gradle.api.tasks.bundling.AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+loom {
+    mixin {
+        useLegacyMixinAp = !unobfuscated
+    }
+    if (project.findProperty('clientRunDir') != null) {
+        runs {
+            client {
+                runDir project.property('clientRunDir')
+            }
+        }
+    }
+}
+
+processResources {
+    def properties = [
+            version: project.version,
+            minecraft_dependency: project.minecraft_dependency,
+            carpet_dependency: project.carpet_dependency,
+            fabric_api_dependency: '*',
+            java_level: javaVersion == JavaVersion.VERSION_25 ? 25 : (javaVersion == JavaVersion.VERSION_21 ? 21 : 16),
+            compatibility_level: javaVersion == JavaVersion.VERSION_25 ? 'JAVA_25' : (javaVersion == JavaVersion.VERSION_21 ? 'JAVA_21' : 'JAVA_16')
+    ]
+    inputs.properties(properties)
+    filesMatching('fabric.mod.json') { expand properties }
+    filesMatching('e8-carpet-addition.mixins.json') {
+        filter { line -> line.replace('{{COMPATIBILITY_LEVEL}}', properties.compatibility_level) }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = unobfuscated ? 25 : 21
+}
+
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    withSourcesJar()
+}

@@ -1,0 +1,5 @@
+{
+    "carpet.category.E8": "E8",
+    "carpet.rule.e8ExampleRule.name": "E8 Example Rule",
+    "carpet.rule.e8ExampleRule.desc": "Skeleton example rule: logs one startup hint on the server when enabled, verifying the /carpet e8ExampleRule registration path; safe to delete"
+}
