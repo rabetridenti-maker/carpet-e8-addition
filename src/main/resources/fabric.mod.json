@@ -1,10 +1,10 @@
 {
     "schemaVersion": 1,
-    "id": "e8-carpet-addition",
+    "id": "carpet-e8-addition",
     "version": "${version}",
     "name": "e8地毯附属",
     "description": "e8 地毯附属（E8 Carpet Addition）：Carpet 扩展骨架，提供 E8 分类规则与服务端命令。",
-    "icon": "assets/e8-carpet-addition/icon.png",
+    "icon": "assets/carpet-e8-addition/icon.png",
     "authors": ["e8"],
     "contact": {},
     "license": "MIT",
@@ -15,7 +15,7 @@
         ]
     },
     "mixins": [
-        "e8-carpet-addition.mixins.json"
+        "carpet-e8-addition.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=0.15.11",

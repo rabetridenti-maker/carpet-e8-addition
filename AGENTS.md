@@ -8,16 +8,16 @@ e8 地毯附属是基于 Minecraft Carpet Mod 的 Carpet Extension（多版本�
 | 类型 | 固定值 |
 | --- | --- |
 | 项目名 | `e8地毯附属`（E8 Carpet Addition） |
-| Mod ID | `e8-carpet-addition` |
+| Mod ID | `carpet-e8-addition` |
 | Java 主包 | `e8.carpet` |
 | Maven Group | `e8` |
-| Archives Base Name | `e8-carpet-addition` |
+| Archives Base Name | `carpet-e8-addition` |
 | Fabric 入口 | `e8.carpet.E8CarpetAddition` |
 | Carpet Extension | `e8.carpet.E8Extension` |
 | 规则类 | `e8.carpet.E8Settings` |
 | Carpet 分类 | `E8` |
 | Mixin Package | `e8.carpet.mixin` |
-| Resource Namespace | `e8-carpet-addition` |
+| Resource Namespace | `carpet-e8-addition` |
 
 相关标识改动必须同步检查 `gradle.properties`、`fabric.mod.json`、Java 常量、lang 资源与 mixins.json。
 
@@ -27,7 +27,7 @@ e8 地毯附属是基于 Minecraft Carpet Mod 的 Carpet Extension（多版本�
 - **不要**用 mixin 注入 `CarpetServer` 注册扩展（Carpet 官方明确警告会崩）。
 - 规则注册：`CarpetServer.settingsManager.parseSettingsClass(E8Settings.class)`（在 `onGameStarted()`）。
 - `extensionSettingsManager()` 返回 `null` = 规则统一进 `/carpet`，不建独立命令。
-- 规则注解用 `carpet.api.settings.Rule`；描述翻译走 `canHasTranslations` + `assets/e8-carpet-addition/lang/`。
+- 规则注解用 `carpet.api.settings.Rule`；描述翻译走 `canHasTranslations` + `assets/carpet-e8-addition/lang/`。
 
 ## 规则 / 命令 / 翻译
 
@@ -35,7 +35,7 @@ e8 地毯附属是基于 Minecraft Carpet Mod 的 Carpet Extension（多版本�
 
 - `E8Settings.java`（字段、categories、options、validators）
 - `E8Extension.java`（注册链路）
-- `assets/e8-carpet-addition/lang/en_us.json` 与 `zh_cn.json`（`carpet.category.E8`、`carpet.rule.<名>.name` / `.desc`）
+- `assets/carpet-e8-addition/lang/en_us.json` 与 `zh_cn.json`（`carpet.category.E8`、`carpet.rule.<名>.name` / `.desc`）
 - 规则介绍正文不用句号；`false`/`ops`/`0`-`4` 之外还有两个以上非自定义选项时逐项换行说明
 
 ## 多版本 Preprocessor（Fallen-Breath）
@@ -57,7 +57,7 @@ e8 地毯附属是基于 Minecraft Carpet Mod 的 Carpet Extension（多版本�
 
 ## Mixin
 
-- `e8-carpet-addition.mixins.json` 是跨版本预处理资源；保持 `required: true` 与 `defaultRequire: 1`。
+- `carpet-e8-addition.mixins.json` 是跨版本预处理资源；保持 `required: true` 与 `defaultRequire: 1`。
 - 不要用 `required=false` / `require=0` / 删失败 mixin / 静默捕获来掩盖兼容问题；Mixin 失败优先查目标类签名、descriptor、注入点与预处理条件。
 - 禁止 `@Overwrite`；优先 `@Inject`/`@Redirect`/`@ModifyVariable`，规则关闭时尽早返回。
 

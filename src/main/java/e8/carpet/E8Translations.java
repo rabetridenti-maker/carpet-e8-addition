@@ -17,7 +17,7 @@ import java.util.Map;
  * 显示 /carpet 的分类名、规则名与描述。
  */
 public final class E8Translations {
-    private static final String LANGUAGE_ROOT = "/assets/e8-carpet-addition/lang/";
+    private static final String LANGUAGE_ROOT = "/assets/carpet-e8-addition/lang/";
     private static final Map<String, String> ENGLISH = loadLanguage("en_us.json");
     private static final Map<String, String> CHINESE = loadLanguage("zh_cn.json");
 

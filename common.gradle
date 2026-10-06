@@ -90,7 +90,7 @@ processResources {
     ]
     inputs.properties(properties)
     filesMatching('fabric.mod.json') { expand properties }
-    filesMatching('e8-carpet-addition.mixins.json') {
+    filesMatching('carpet-e8-addition.mixins.json') {
         filter { line -> line.replace('{{COMPATIBILITY_LEVEL}}', properties.compatibility_level) }
     }
 }

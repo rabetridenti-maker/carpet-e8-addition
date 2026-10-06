@@ -9,7 +9,7 @@ import net.fabricmc.api.ModInitializer;
  */
 public class E8CarpetAddition implements ModInitializer {
 
-    public static final String MOD_ID = "e8-carpet-addition";
+    public static final String MOD_ID = "carpet-e8-addition";
 
     @Override
     public void onInitialize() {

@@ -22,7 +22,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'e8-carpet-addition'
+rootProject.name = 'carpet-e8-addition'
 
 def settings = new JsonSlurper().parseText(file('settings.json').text)
 for (String version : settings.versions) {
